@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./css/App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Login from "./components/Login";
 import Home from "./components/Home";
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.localStorage.getItem("user")) {
+      setAuthenticated(true);
+      navigate("/home");
+    }
+  }, [navigate]);
   return (
     <div className="App">
       <Routes>

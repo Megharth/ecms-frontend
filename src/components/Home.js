@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import "../css/Home.css";
 import ProductCard from "./ProductCard";
 
@@ -17,6 +17,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}product`).then((response) => {
       response.json().then((data) => {
@@ -36,6 +38,12 @@ const Home = () => {
     } else {
       setFilteredProducts(products);
     }
+  };
+
+  const logout = () => {
+    window.localStorage.removeItem("user");
+    window.localStorage.removeItem("userType");
+    navigate("/");
   };
 
   return (
@@ -69,7 +77,7 @@ const Home = () => {
               </IconButton>
             )}
           </Paper>
-          <IconButton className="logout-btn">
+          <IconButton className="logout-btn" onClick={logout}>
             <Logout />
           </IconButton>
         </Toolbar>

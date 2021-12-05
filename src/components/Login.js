@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import ErrorSnackbar from "./ErrorSnackbar";
+import { useNavigate } from "react-router-dom";
 
 import "../css/Login.css";
 
@@ -21,6 +22,7 @@ const Login = () => {
   const [loginFail, setLoginFail] = useState(false);
   const [userType, setUserType] = useState("shopper");
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (email && password) {
@@ -41,6 +43,8 @@ const Login = () => {
       const { success } = await response.json();
       if (success) {
         window.localStorage.setItem("user", email);
+        window.localStorage.setItem("userType", userType);
+        navigate("/home");
       } else {
         setLoginFail(true);
         setErrorMsg("Username or password incorrect");
