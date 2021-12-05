@@ -10,8 +10,18 @@
     width: 1200px;
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 55%;
     transform: translate(-50%, -50%);
     flex-wrap: wrap;
     overflow-y: auto;
+}
+
+.home .search-bar {
+    margin-left: 250px;
+}
+
+.home .logout-btn {
+    position: absolute;
+    right: 15px;
+    color: white;
 }
