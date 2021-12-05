@@ -1,6 +1,19 @@
 ::-webkit-scrollbar {
-    display: none;
+    height: 4px;
+    width: 4px;
+    border: 1px solid black;
+    color: #ababab;
 }
+
+::-webkit-scrollbar-track {
+    border-radius: 0;
+    background: #eeeeee;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background: #b0b0b0;
+  }
 
 .price-quantity-section {
     display: block;
@@ -36,4 +49,16 @@
 
 .product-img {
     border-radius: 10px;
+}
+
+.reviews {
+    border: 1px solid #ababab;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.reviews .review-card {
+    margin: 8px 0 8px 0;
 }

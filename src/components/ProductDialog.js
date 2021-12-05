@@ -3,9 +3,11 @@ import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 
 import "../css/ProductDialog.css";
 import SellerCard from "./SellerCard";
+import ReviewCard from "./ReviewCard";
 
 const ProductDialog = ({ open, handleClose, product }) => {
-  const { name, category, price, description, quantity, sellers } = product;
+  const { name, category, price, description, quantity, sellers, reviews } =
+    product;
   console.log(category);
   return (
     <Dialog open={open} onClose={handleClose} className="product-dialog">
@@ -47,6 +49,11 @@ const ProductDialog = ({ open, handleClose, product }) => {
           <Typography variant="body1" color="text.primary">
             Reviews
           </Typography>
+          <div className="reviews">
+            {reviews.map((review) => (
+              <ReviewCard review={review} />
+            ))}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
