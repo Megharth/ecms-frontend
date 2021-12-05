@@ -1,0 +1,39 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+.price-quantity-section {
+    display: block;
+}
+
+.section {
+    margin-top: 10px;   
+}
+
+.price-quantity-section .MuiTypography-root {
+    margin: 0 25px 0 0;
+    font-size: 0.9rem;
+}
+
+.product-desc {
+    border: 1px solid #ababab;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.sellers {
+    overflow-x: auto;
+    white-space: nowrap;
+    border: 1px solid #ababab;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.sellers .seller-card {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.product-img {
+    border-radius: 10px;
+}

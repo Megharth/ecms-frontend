@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
-
+import { Slide } from "@mui/material";
 import "../css/ProductCard.css";
+import ProductDialog from "./ProductDialog";
 
 const ProductCard = ({ product }) => {
   const { category, name, price } = product;
+  const [openDialog, setOpenDialog] = useState(false);
+
   const categoryMap = {};
   const formatCategory = (category) => {
     if (category) {
@@ -18,26 +21,37 @@ const ProductCard = ({ product }) => {
       return categoryMap[category];
     }
   };
+
   return (
-    <Card className="product-card">
-      <CardMedia
-        component="img"
-        height="180"
-        image="https://picsum.photos/380/180"
-        alt={name}
+    <div>
+      <Card className="product-card" onClick={() => setOpenDialog(true)}>
+        <CardMedia
+          component="img"
+          height="180"
+          image="https://picsum.photos/380/180"
+          alt={name}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {formatCategory(category)}
+          </Typography>
+          <Typography variant="body2" color="text.subtitle">
+            ${price}
+          </Typography>
+        </CardContent>
+      </Card>
+      <ProductDialog
+        open={openDialog}
+        handleClose={() => {
+          console.log("closing dialog");
+          setOpenDialog(false);
+        }}
+        product={{ ...product, category: formatCategory(category) }}
       />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {formatCategory(category)}
-        </Typography>
-        <Typography variant="body2" color="text.subtitle">
-          ${price}
-        </Typography>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 
