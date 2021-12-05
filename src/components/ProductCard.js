@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { Slide } from "@mui/material";
 import "../css/ProductCard.css";
 import ProductDialog from "./ProductDialog";
 

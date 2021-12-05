@@ -62,3 +62,15 @@
 .reviews .review-card {
     margin: 8px 0 8px 0;
 }
+
+.new-review {
+    margin-top: 20px;
+}
+
+.new-review .MuiTextField-root {
+    width: 80%;
+}
+
+.new-review .MuiButton-root {
+    margin: 8px 0 0 12px;
+}

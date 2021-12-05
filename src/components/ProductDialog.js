@@ -1,14 +1,55 @@
-import React from "react";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 
 import "../css/ProductDialog.css";
 import SellerCard from "./SellerCard";
 import ReviewCard from "./ReviewCard";
 
 const ProductDialog = ({ open, handleClose, product }) => {
-  const { name, category, price, description, quantity, sellers, reviews } =
-    product;
-  console.log(category);
+  const {
+    _id,
+    name,
+    category,
+    price,
+    description,
+    quantity,
+    sellers,
+    reviews,
+  } = product;
+
+  const [offlineReviews, setOfflineReviews] = useState([]);
+  const [review, setReview] = useState("");
+
+  const handleAddReview = (e) => setReview(e.target.value);
+
+  const submitReview = async () => {
+    if (review.length > 0) {
+      const reviewObj = {
+        content: review,
+        created: new Date(),
+        updated: new Date(),
+      };
+      setOfflineReviews((oldOfflineReviews) => {
+        oldOfflineReviews.push(reviewObj);
+        return oldOfflineReviews;
+      });
+      setReview("");
+      await fetch(`${process.env.REACT_APP_API_URL}product/${_id}/add-review`, {
+        method: "POST",
+        body: JSON.stringify({ review: reviewObj }),
+        headers: {
+          "Content-Type": "Application/json",
+        },
+      });
+    }
+  };
   return (
     <Dialog open={open} onClose={handleClose} className="product-dialog">
       <DialogTitle>{name}</DialogTitle>
@@ -41,7 +82,7 @@ const ProductDialog = ({ open, handleClose, product }) => {
           </Typography>
           <div className="sellers">
             {sellers.map((seller) => (
-              <SellerCard seller={seller} />
+              <SellerCard key={seller._id} seller={seller} />
             ))}
           </div>
         </div>
@@ -50,9 +91,26 @@ const ProductDialog = ({ open, handleClose, product }) => {
             Reviews
           </Typography>
           <div className="reviews">
-            {reviews.map((review) => (
-              <ReviewCard review={review} />
+            {[...reviews, ...offlineReviews].map((review) => (
+              <ReviewCard
+                key={review ? review._id : new Date()}
+                review={review}
+              />
             ))}
+          </div>
+          <div className="new-review">
+            <TextField
+              label="Review"
+              multiline
+              maxRows={4}
+              placeholder="Add a review"
+              type="textarea"
+              onChange={handleAddReview}
+              value={review}
+            />
+            <Button variant="contained" onClick={submitReview}>
+              Submit
+            </Button>
           </div>
         </div>
       </DialogContent>
