@@ -124,12 +124,14 @@ const Home = () => {
           </Paper>
 
           <div className="right-action-btns">
-            <IconButton
-              className="action-btn"
-              onClick={() => setCreateProduct(true)}
-            >
-              <Add />
-            </IconButton>
+            {window.localStorage.getItem("userType") === "admin" && (
+              <IconButton
+                className="action-btn"
+                onClick={() => setCreateProduct(true)}
+              >
+                <Add />
+              </IconButton>
+            )}
             <IconButton className="action-btn" onClick={logout}>
               <Logout />
             </IconButton>

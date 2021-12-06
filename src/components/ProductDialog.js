@@ -110,15 +110,16 @@ const ProductDialog = ({ open, handleClose, product, updateProduct }) => {
             <Typography variant="body1" color="text.primary">
               Product Info
             </Typography>
-            {editing ? (
-              <IconButton color="info" onClick={toggleEdit}>
-                <Check />
-              </IconButton>
-            ) : (
-              <IconButton color="info" onClick={toggleEdit}>
-                <Edit />
-              </IconButton>
-            )}
+            {window.localStorage.getItem("userType") === "admin" &&
+              (editing ? (
+                <IconButton color="info" onClick={toggleEdit}>
+                  <Check />
+                </IconButton>
+              ) : (
+                <IconButton color="info" onClick={toggleEdit}>
+                  <Edit />
+                </IconButton>
+              ))}
           </div>
           <div className="product-desc">
             {editing ? (
@@ -224,20 +225,22 @@ const ProductDialog = ({ open, handleClose, product, updateProduct }) => {
               />
             ))}
           </div>
-          <div className="new-review">
-            <TextField
-              label="Review"
-              multiline
-              maxRows={4}
-              placeholder="Add a review"
-              type="text"
-              onChange={handleAddReview}
-              value={review}
-            />
-            <Button variant="contained" onClick={submitReview}>
-              Submit
-            </Button>
-          </div>
+          {window.localStorage.getItem("userType") === "shopper" && (
+            <div className="new-review">
+              <TextField
+                label="Review"
+                multiline
+                maxRows={4}
+                placeholder="Add a review"
+                type="text"
+                onChange={handleAddReview}
+                value={review}
+              />
+              <Button variant="contained" onClick={submitReview}>
+                Submit
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

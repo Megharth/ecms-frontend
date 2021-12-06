@@ -56,11 +56,13 @@ const ProductCard = ({ product, deleteProduct, updateProduct }) => {
               ${price}
             </Typography>
           </div>
-          <div className="action-btns">
-            <IconButton color="error" onClick={handleDelete}>
-              <Delete />
-            </IconButton>
-          </div>
+          {window.localStorage.getItem("userType") === "admin" && (
+            <div className="action-btns">
+              <IconButton color="error" onClick={handleDelete}>
+                <Delete />
+              </IconButton>
+            </div>
+          )}
         </CardContent>
       </Card>
       <ProductDialog
