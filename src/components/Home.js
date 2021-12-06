@@ -14,6 +14,7 @@ import ProductCard from "./ProductCard";
 import ErrorSnackbar from "./ErrorSnackbar";
 
 import "../css/Home.css";
+import CreateProduct from "./CreateProduct";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -21,16 +22,21 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [createProduct, setCreateProduct] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}product`).then((response) => {
       response.json().then((data) => {
         setProducts(data.products);
-        setFilteredProducts(data.products);
       });
     });
   }, []);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   const handleSearch = (e) => setSearch(e.target.value);
 
@@ -62,9 +68,6 @@ const Home = () => {
 
     if (success) {
       setProducts((oldProducts) => oldProducts.filter(({ _id }) => _id !== id));
-      setFilteredProducts((oldProducts) =>
-        oldProducts.filter(({ _id }) => _id !== id)
-      );
     } else {
       setErrorMsg("Cannot delete product");
       setError(true);
@@ -79,7 +82,13 @@ const Home = () => {
       });
     };
     setProducts(callback);
-    setFilteredProducts(callback);
+  };
+
+  const addNewProduct = (newProduct) => {
+    setProducts((oldProducts) => {
+      oldProducts.push(newProduct);
+      return oldProducts;
+    });
   };
 
   return (
@@ -115,7 +124,10 @@ const Home = () => {
           </Paper>
 
           <div className="right-action-btns">
-            <IconButton className="action-btn">
+            <IconButton
+              className="action-btn"
+              onClick={() => setCreateProduct(true)}
+            >
               <Add />
             </IconButton>
             <IconButton className="action-btn" onClick={logout}>
@@ -138,6 +150,15 @@ const Home = () => {
           <div>Loading products</div>
         )}
       </div>
+      <CreateProduct
+        open={createProduct}
+        handleClose={() => setCreateProduct(false)}
+        allSellers={[].concat.apply(
+          [],
+          products.map((product) => product.sellers)
+        )}
+        addNewProduct={addNewProduct}
+      />
       <ErrorSnackbar
         open={error}
         handleClose={() => {

@@ -167,7 +167,7 @@ const ProductDialog = ({ open, handleClose, product, updateProduct }) => {
                   />
                 </FormControl>
                 <FormControl variant="standard" className="product-edit-input">
-                  <InputLabel htmlFor="product-ct-input">quantity</InputLabel>
+                  <InputLabel htmlFor="product-ct-input">Quantity</InputLabel>
                   <Input
                     id="product-ct-input"
                     endAdornment={
