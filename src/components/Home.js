@@ -71,6 +71,17 @@ const Home = () => {
     }
   };
 
+  const updateProduct = (id, updatedProduct) => {
+    const callback = (oldProducts) => {
+      return oldProducts.map((product) => {
+        if (product._id === id) return { ...product, ...updatedProduct };
+        else return product;
+      });
+    };
+    setProducts(callback);
+    setFilteredProducts(callback);
+  };
+
   return (
     <div className="home">
       <AppBar>
@@ -120,6 +131,7 @@ const Home = () => {
               key={product._id}
               product={product}
               deleteProduct={deleteProduct}
+              updateProduct={updateProduct}
             />
           ))
         ) : (

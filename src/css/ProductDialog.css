@@ -80,3 +80,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.product-edit-input {
+    margin: 10px !important;
+}

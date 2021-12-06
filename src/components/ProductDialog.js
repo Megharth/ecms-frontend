@@ -7,14 +7,18 @@ import {
   TextField,
   Button,
   IconButton,
+  InputAdornment,
+  InputLabel,
+  FormControl,
+  Input,
 } from "@mui/material";
-
-import "../css/ProductDialog.css";
 import SellerCard from "./SellerCard";
 import ReviewCard from "./ReviewCard";
-import { Edit } from "@mui/icons-material";
+import { Check, Edit } from "@mui/icons-material";
 
-const ProductDialog = ({ open, handleClose, product }) => {
+import "../css/ProductDialog.css";
+
+const ProductDialog = ({ open, handleClose, product, updateProduct }) => {
   const {
     _id,
     name,
@@ -28,6 +32,12 @@ const ProductDialog = ({ open, handleClose, product }) => {
 
   const [offlineReviews, setOfflineReviews] = useState([]);
   const [review, setReview] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [productName, setProductName] = useState(name);
+  const [productDesc, setProductDesc] = useState(description);
+  const [productPrice, setProductPrice] = useState(price);
+  const [productCt, setProductCt] = useState(quantity);
+  const [edited, setEdited] = useState(false);
 
   const handleAddReview = (e) => setReview(e.target.value);
 
@@ -52,9 +62,43 @@ const ProductDialog = ({ open, handleClose, product }) => {
       });
     }
   };
+
+  const toggleEdit = async () => {
+    if (editing && edited) {
+      const updatedProduct = {
+        name: productName,
+        description: productDesc,
+        price: productPrice,
+        quantity: productCt,
+      };
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}product/${_id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            product: updatedProduct,
+          }),
+          headers: {
+            "Content-Type": "Application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (data.updatedProduct) {
+        updateProduct(_id, updatedProduct);
+      } else {
+        console.log("Failed to updated");
+      }
+
+      setEdited(false);
+    }
+    setEditing((isEditing) => !isEditing);
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} className="product-dialog">
-      <DialogTitle>{name}</DialogTitle>
+      <DialogTitle>{productName}</DialogTitle>
       <DialogContent>
         <img
           src="https://picsum.photos/550/280"
@@ -66,21 +110,96 @@ const ProductDialog = ({ open, handleClose, product }) => {
             <Typography variant="body1" color="text.primary">
               Product Info
             </Typography>
-            <IconButton>
-              <Edit />
-            </IconButton>
+            {editing ? (
+              <IconButton color="info" onClick={toggleEdit}>
+                <Check />
+              </IconButton>
+            ) : (
+              <IconButton color="info" onClick={toggleEdit}>
+                <Edit />
+              </IconButton>
+            )}
           </div>
           <div className="product-desc">
-            <Typography variant="body1" color="text.primary">
-              Description: {description}
-            </Typography>
-            <div className="price-quantity-section">
-              <Typography variant="caption">Price: ${price}</Typography>
-              <Typography variant="caption">Quantity: {quantity} ct</Typography>
-            </div>
-            <Typography variant="caption" color="text.secondary">
-              Category: {category}
-            </Typography>
+            {editing ? (
+              <div>
+                <TextField
+                  value={productName}
+                  multiline
+                  fullWidth
+                  variant="standard"
+                  label="Product name"
+                  maxRows={1}
+                  type="text"
+                  className="product-edit-input"
+                  onChange={(e) => {
+                    setProductName(e.target.value);
+                    setEdited(true);
+                  }}
+                />
+                <TextField
+                  value={productDesc}
+                  multiline
+                  fullWidth
+                  variant="standard"
+                  label="Description"
+                  maxRows={4}
+                  type="text"
+                  className="product-edit-input"
+                  onChange={(e) => {
+                    setProductDesc(e.target.value);
+                    setEdited(true);
+                  }}
+                />
+                <FormControl variant="standard" className="product-edit-input">
+                  <InputLabel htmlFor="product-price-input">Price</InputLabel>
+                  <Input
+                    id="product-price-input"
+                    startAdornment={
+                      <InputAdornment position="start">$</InputAdornment>
+                    }
+                    value={productPrice}
+                    type="number"
+                    onChange={(e) => {
+                      setProductPrice(parseInt(e.target.value));
+                      setEdited(true);
+                    }}
+                  />
+                </FormControl>
+                <FormControl variant="standard" className="product-edit-input">
+                  <InputLabel htmlFor="product-ct-input">quantity</InputLabel>
+                  <Input
+                    id="product-ct-input"
+                    endAdornment={
+                      <InputAdornment position="end">ct</InputAdornment>
+                    }
+                    value={productCt}
+                    type="number"
+                    onChange={(e) => {
+                      setProductCt(parseInt(e.target.value));
+                      setEdited(true);
+                    }}
+                  />
+                </FormControl>
+              </div>
+            ) : (
+              <div>
+                <Typography variant="body1" color="text.primary">
+                  Description: {productDesc}
+                </Typography>
+                <div className="price-quantity-section">
+                  <Typography variant="caption">
+                    Price: ${productPrice}
+                  </Typography>
+                  <Typography variant="caption">
+                    Quantity: {productCt} ct
+                  </Typography>
+                </div>
+                <Typography variant="caption" color="text.secondary">
+                  Category: {category}
+                </Typography>
+              </div>
+            )}
           </div>
         </div>
         <div className="section">
@@ -111,7 +230,7 @@ const ProductDialog = ({ open, handleClose, product }) => {
               multiline
               maxRows={4}
               placeholder="Add a review"
-              type="textarea"
+              type="text"
               onChange={handleAddReview}
               value={review}
             />

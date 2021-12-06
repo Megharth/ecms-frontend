@@ -6,11 +6,12 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import "../css/ProductCard.css";
 import ProductDialog from "./ProductDialog";
 import { Delete } from "@mui/icons-material";
 
-const ProductCard = ({ product, deleteProduct }) => {
+import "../css/ProductCard.css";
+
+const ProductCard = ({ product, deleteProduct, updateProduct }) => {
   const { _id, category, name, price } = product;
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -65,9 +66,9 @@ const ProductCard = ({ product, deleteProduct }) => {
       <ProductDialog
         open={openDialog}
         handleClose={() => {
-          console.log("closing dialog");
           setOpenDialog(false);
         }}
+        updateProduct={updateProduct}
         product={{ ...product, category: formatCategory(category) }}
       />
     </div>
