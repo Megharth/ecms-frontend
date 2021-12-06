@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import "../css/ProductCard.css";
 import ProductDialog from "./ProductDialog";
+import { Delete } from "@mui/icons-material";
 
-const ProductCard = ({ product }) => {
-  const { category, name, price } = product;
+const ProductCard = ({ product, deleteProduct }) => {
+  const { _id, category, name, price } = product;
   const [openDialog, setOpenDialog] = useState(false);
 
   const categoryMap = {};
@@ -21,6 +28,12 @@ const ProductCard = ({ product }) => {
     }
   };
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    deleteProduct(_id);
+  };
+
   return (
     <div>
       <Card className="product-card" onClick={() => setOpenDialog(true)}>
@@ -30,16 +43,23 @@ const ProductCard = ({ product }) => {
           image="https://picsum.photos/380/180"
           alt={name}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {formatCategory(category)}
-          </Typography>
-          <Typography variant="body2" color="text.subtitle">
-            ${price}
-          </Typography>
+        <CardContent className="product-overview">
+          <div>
+            <Typography gutterBottom variant="h5" component="div">
+              {name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {formatCategory(category)}
+            </Typography>
+            <Typography variant="body2" color="text.subtitle">
+              ${price}
+            </Typography>
+          </div>
+          <div className="action-btns">
+            <IconButton color="error" onClick={handleDelete}>
+              <Delete />
+            </IconButton>
+          </div>
         </CardContent>
       </Card>
       <ProductDialog

@@ -1,4 +1,4 @@
-import { Logout, Search } from "@mui/icons-material";
+import { Add, Logout, Search } from "@mui/icons-material";
 import Close from "@mui/icons-material/Close";
 import {
   AppBar,
@@ -10,13 +10,17 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/Home.css";
 import ProductCard from "./ProductCard";
+import ErrorSnackbar from "./ErrorSnackbar";
+
+import "../css/Home.css";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +48,27 @@ const Home = () => {
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("userType");
     navigate("/");
+  };
+
+  const deleteProduct = async (id) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}product/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const { success } = await response.json();
+
+    if (success) {
+      setProducts((oldProducts) => oldProducts.filter(({ _id }) => _id !== id));
+      setFilteredProducts((oldProducts) =>
+        oldProducts.filter(({ _id }) => _id !== id)
+      );
+    } else {
+      setErrorMsg("Cannot delete product");
+      setError(true);
+    }
   };
 
   return (
@@ -77,20 +102,38 @@ const Home = () => {
               </IconButton>
             )}
           </Paper>
-          <IconButton className="logout-btn" onClick={logout}>
-            <Logout />
-          </IconButton>
+
+          <div className="right-action-btns">
+            <IconButton className="action-btn">
+              <Add />
+            </IconButton>
+            <IconButton className="action-btn" onClick={logout}>
+              <Logout />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <div className="catalogue">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard
+              key={product._id}
+              product={product}
+              deleteProduct={deleteProduct}
+            />
           ))
         ) : (
-          <div>Loading products;</div>
+          <div>Loading products</div>
         )}
       </div>
+      <ErrorSnackbar
+        open={error}
+        handleClose={() => {
+          setError(false);
+          setErrorMsg("");
+        }}
+        message={errorMsg}
+      />
     </div>
   );
 };

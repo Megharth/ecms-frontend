@@ -74,3 +74,9 @@
 .new-review .MuiButton-root {
     margin: 8px 0 0 12px;
 }
+
+.product-desc-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

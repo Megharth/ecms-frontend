@@ -6,11 +6,13 @@ import {
   Typography,
   TextField,
   Button,
+  IconButton,
 } from "@mui/material";
 
 import "../css/ProductDialog.css";
 import SellerCard from "./SellerCard";
 import ReviewCard from "./ReviewCard";
+import { Edit } from "@mui/icons-material";
 
 const ProductDialog = ({ open, handleClose, product }) => {
   const {
@@ -60,9 +62,14 @@ const ProductDialog = ({ open, handleClose, product }) => {
           className="product-img"
         />
         <div className="section">
-          <Typography variant="body1" color="text.primary">
-            Product Info
-          </Typography>
+          <div className="product-desc-heading">
+            <Typography variant="body1" color="text.primary">
+              Product Info
+            </Typography>
+            <IconButton>
+              <Edit />
+            </IconButton>
+          </div>
           <div className="product-desc">
             <Typography variant="body1" color="text.primary">
               Description: {description}

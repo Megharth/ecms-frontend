@@ -20,8 +20,12 @@
     margin-left: 250px;
 }
 
-.home .logout-btn {
+.home .right-action-btns {
     position: absolute;
     right: 15px;
+}
+
+.home .right-action-btns .action-btn {
     color: white;
+    margin: 0 5px 0 5px;
 }
