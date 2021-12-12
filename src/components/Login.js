@@ -95,11 +95,6 @@ const Login = () => {
                   label="Shopper"
                 />
                 <FormControlLabel
-                  value="staff"
-                  control={<Radio />}
-                  label="Staff"
-                />
-                <FormControlLabel
                   value="admin"
                   control={<Radio />}
                   label="Admin"
