@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Card,
   CardContent,
   Dialog,
@@ -15,7 +16,14 @@ import {
 import "../css/Orders.css";
 import { Delete, ExpandMore } from "@mui/icons-material";
 
-const Orders = ({ open, orders, handleClose, removeFromCart, pastOrders }) => {
+const Orders = ({
+  open,
+  orders,
+  handleClose,
+  removeFromCart,
+  pastOrders,
+  orderNow,
+}) => {
   const createOrderCards = (arr) =>
     arr.map((order) => (
       <Card key={order._id} className="order-card">
@@ -64,7 +72,16 @@ const Orders = ({ open, orders, handleClose, removeFromCart, pastOrders }) => {
           </AccordionSummary>
           <AccordionDetails>
             {orders.size > 0 ? (
-              createOrderCards(Array.from(orders))
+              <div>
+                {createOrderCards(Array.from(orders))}
+                <Button
+                  variant="contained"
+                  className="order-btn"
+                  onClick={orderNow}
+                >
+                  Order now
+                </Button>
+              </div>
             ) : (
               <div>No orders here!</div>
             )}

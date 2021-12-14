@@ -126,6 +126,32 @@ const Home = () => {
     [orders, setOrders]
   );
 
+  const orderNow = async () => {
+    let res = await fetch(`${process.env.REACT_APP_API_URL}order/bulk`, {
+      method: "POST",
+      body: JSON.stringify({
+        products: Array.from(orders).map((order) => order._id),
+        email: window.localStorage.getItem("user"),
+        discount: 0,
+      }),
+      headers: {
+        "Content-Type": "Application/json",
+      },
+    });
+    let data = await res.json();
+
+    res = await fetch(
+      `${process.env.REACT_APP_API_URL}user/${window.localStorage.getItem(
+        "user"
+      )}/orders`
+    );
+
+    data = await res.json();
+
+    setOrders(new Set());
+    setPastOrders(data.orders);
+  };
+
   return (
     <div className="home">
       <AppBar>
@@ -211,6 +237,7 @@ const Home = () => {
         handleClose={() => setOpenOrders(false)}
         removeFromCart={removeFromCart}
         pastOrders={pastOrders}
+        orderNow={orderNow}
       />
       <ErrorSnackbar
         open={error}
