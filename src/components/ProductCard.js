@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import ProductDialog from "./ProductDialog";
-import { Delete } from "@mui/icons-material";
+import { AddShoppingCart, Delete } from "@mui/icons-material";
 
 import "../css/ProductCard.css";
 
-const ProductCard = ({ product, deleteProduct, updateProduct }) => {
+const ProductCard = ({ product, deleteProduct, updateProduct, addToCart }) => {
   const { _id, category, name, price } = product;
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -56,13 +56,23 @@ const ProductCard = ({ product, deleteProduct, updateProduct }) => {
               ${price}
             </Typography>
           </div>
-          {window.localStorage.getItem("userType") === "admin" && (
-            <div className="action-btns">
+          <div className="action-btns">
+            {window.localStorage.getItem("userType") === "admin" ? (
               <IconButton color="error" onClick={handleDelete}>
                 <Delete />
               </IconButton>
-            </div>
-          )}
+            ) : (
+              <IconButton
+                color="info"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(product);
+                }}
+              >
+                <AddShoppingCart />
+              </IconButton>
+            )}
+          </div>
         </CardContent>
       </Card>
       <ProductDialog

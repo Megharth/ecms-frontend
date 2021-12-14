@@ -1,20 +1,22 @@
-import { Add, Logout, Search } from "@mui/icons-material";
+import { Add, Logout, Search, ShoppingCart } from "@mui/icons-material";
 import Close from "@mui/icons-material/Close";
 import {
   AppBar,
+  Badge,
   IconButton,
   InputBase,
   Paper,
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import ErrorSnackbar from "./ErrorSnackbar";
 
 import "../css/Home.css";
 import CreateProduct from "./CreateProduct";
+import Orders from "./Cart";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -23,6 +25,9 @@ const Home = () => {
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [createProduct, setCreateProduct] = useState(false);
+  const [orders, setOrders] = useState(new Set());
+  const [openOrders, setOpenOrders] = useState(false);
+  const [pastOrders, setPastOrders] = useState([]);
 
   const navigate = useNavigate();
 
@@ -32,6 +37,18 @@ const Home = () => {
         setProducts(data.products);
       });
     });
+  }, []);
+
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}user/${window.localStorage.getItem(
+        "user"
+      )}/orders`
+    ).then((res) =>
+      res.json().then((data) => {
+        setPastOrders(data.orders);
+      })
+    );
   }, []);
 
   useEffect(() => {
@@ -91,6 +108,24 @@ const Home = () => {
     });
   };
 
+  const addToCart = useCallback(
+    (item) => {
+      const updatedOrders = new Set(orders);
+      updatedOrders.add(item);
+      setOrders(updatedOrders);
+    },
+    [orders, setOrders]
+  );
+
+  const removeFromCart = useCallback(
+    (item) => {
+      const updatedOrders = new Set(orders);
+      updatedOrders.delete(item);
+      setOrders(updatedOrders);
+    },
+    [orders, setOrders]
+  );
+
   return (
     <div className="home">
       <AppBar>
@@ -124,6 +159,14 @@ const Home = () => {
           </Paper>
 
           <div className="right-action-btns">
+            <IconButton
+              className="action-btn"
+              onClick={() => setOpenOrders(true)}
+            >
+              <Badge badgeContent={orders.size} color="secondary">
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
             {window.localStorage.getItem("userType") === "admin" && (
               <IconButton
                 className="action-btn"
@@ -146,6 +189,7 @@ const Home = () => {
               product={product}
               deleteProduct={deleteProduct}
               updateProduct={updateProduct}
+              addToCart={addToCart}
             />
           ))
         ) : (
@@ -160,6 +204,13 @@ const Home = () => {
           products.map((product) => product.sellers)
         )}
         addNewProduct={addNewProduct}
+      />
+      <Orders
+        open={openOrders}
+        orders={orders}
+        handleClose={() => setOpenOrders(false)}
+        removeFromCart={removeFromCart}
+        pastOrders={pastOrders}
       />
       <ErrorSnackbar
         open={error}
