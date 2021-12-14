@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import "../css/Orders.css";
-import { Delete, ExpandMore } from "@mui/icons-material";
+import { Delete, DeleteForever, ExpandMore } from "@mui/icons-material";
 
 const Orders = ({
   open,
@@ -23,6 +23,7 @@ const Orders = ({
   removeFromCart,
   pastOrders,
   orderNow,
+  deleteOrder,
 }) => {
   const createOrderCards = (arr) =>
     arr.map((order) => (
@@ -45,18 +46,29 @@ const Orders = ({
     arr.map((order) => (
       <Card key={order._id} className="order-card">
         <CardContent>
-          <div>
-            <Typography variant="subtitle2" color="text.secondary">
-              {order.orderedDate}
-            </Typography>
-            <Typography variant="body1">Name: {order.productName}</Typography>
-            <Typography variant="subtitle2">
-              Quantity: {order.quantity}
-            </Typography>
-            <Typography variant="subtitle2">Total: {order.total}</Typography>
-            <Typography variant="caption" color="text.secondary">
-              Status: {order.orderStatus}
-            </Typography>
+          <div className="order-flex-box">
+            <div>
+              <Typography variant="subtitle2" color="text.secondary">
+                {order.orderedDate}
+              </Typography>
+              <Typography variant="body1">Name: {order.productName}</Typography>
+              <Typography variant="subtitle2">
+                Quantity: {order.quantity}
+              </Typography>
+              <Typography variant="subtitle2">Total: {order.total}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Status: {order.orderStatus}
+              </Typography>
+            </div>
+            {order.orderStatus !== "DELIVERED" && (
+              <IconButton
+                variant="contained"
+                color="error"
+                onClick={() => deleteOrder(order._id)}
+              >
+                <DeleteForever />
+              </IconButton>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -152,6 +152,21 @@ const Home = () => {
     setPastOrders(data.orders);
   };
 
+  const deleteOrder = async (orderId) => {
+    await fetch(`${process.env.REACT_APP_API_URL}order/${orderId}`, {
+      method: "DELETE",
+    });
+
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}user/${window.localStorage.getItem(
+        "user"
+      )}/orders`
+    );
+
+    const data = await res.json();
+    setPastOrders(data.orders);
+  };
+
   return (
     <div className="home">
       <AppBar>
@@ -238,6 +253,7 @@ const Home = () => {
         removeFromCart={removeFromCart}
         pastOrders={pastOrders}
         orderNow={orderNow}
+        deleteOrder={deleteOrder}
       />
       <ErrorSnackbar
         open={error}
